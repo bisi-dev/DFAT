@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -18,27 +19,19 @@ import Identicon from "./Identicon";
 import { useAxios } from "use-axios-client";
 import { VictoryBar, VictoryChart, VictoryTheme, VictoryContainer } from 'victory';
 
+
 export default function AccountDashboard() {
   const { account, deactivate, chainId } = useEthers();
+  const navigate = useNavigate();
 
   const YourApiKeyToken = process.env.REACT_APP_API_KEY;
 
-  // const { data, error, loading } = useAxios({
-  //   url: "https://api.etherscan.io/api?module=stats&action=ethprice&apikey=YourApiKeyToken"
-  // });
-
   let alias = '';
-  let href = '';
-  let network = '';
 
   if (chainId === 1) {
     alias = '';
-    href = "https://etherscan.io/address/" + account
-    network = "Ethereum Mainnet"
   } else if (chainId === 3) {
     alias = '-ropsten';
-    href = "https://ropsten.etherscan.io/address/" + account
-    network = "Ropsten Test Network"
   }
 
   const { data, error, loading } = useAxios({
@@ -73,148 +66,177 @@ export default function AccountDashboard() {
     return transfer
   }
 
-  function handleDeactivateAccount() {
-    deactivate();
+  function routeChange() {
+    navigate('/')
   }
 
   return (
-    <Modal isCentered size="md">
-      <ModalOverlay />
-      <ModalContent
-        background="gray.900"
-        border="1px"
-        borderStyle="solid"
-        borderColor="gray.700"
-        borderRadius="3xl"
-      >
-        <ModalHeader color="white" px={4} fontSize="lg" fontWeight="medium">
-          Dashboard
-        </ModalHeader>
-        <ModalCloseButton
-          color="white"
-          fontSize="sm"
-          _hover={{
-            color: "whiteAlpha.700",
-          }}
+    <div>
+      <VictoryChart theme={VictoryTheme.material} domainPadding={30}>
+        <VictoryBar data={data.result}
+          x={(d) => formatDate(d.timeStamp)} y={(d) => formatValue(d)}
+        // x={(d) => formatDate(d.timeStamp)} 
+        // y={(d) => account == 1 ? (d.value) * 10 ** -18 : -(d.value) * 10 ** -18 }
         />
-        <ModalBody pt={0} px={4}>
-          <Box
-            borderRadius="3xl"
-            border="1px"
-            borderStyle="solid"
-            borderColor="gray.600"
-            px={5}
-            pt={4}
-            pb={2}
-            mb={3}
-          >
-            <Flex justifyContent="space-between" alignItems="center" mb={3}>
-              <Text color="gray.400" fontSize="sm">
-                Connected with MetaMask
-              </Text>
-              <Button
-                variant="outline"
-                size="sm"
-                borderColor="blue.800"
-                borderRadius="3xl"
-                color="blue.500"
-                fontSize="13px"
-                fontWeight="normal"
-                px={2}
-                height="26px"
-                _hover={{
-                  background: "none",
-                  borderColor: "blue.300",
-                  textDecoration: "underline",
-                }}
-                onClick={handleDeactivateAccount}
-              >
-                Change
-              </Button>
-            </Flex>
-            <Flex alignItems="center" mt={2} mb={4} lineHeight={1}>
-              <Identicon />
-              <Text
-                color="white"
-                fontSize="xl"
-                fontWeight="semibold"
-                ml="2"
-                lineHeight="1.1"
-              >
-                {account &&
-                  `${account.slice(0, 6)
-                  }...${account.slice(
-                    account.length - 4,
-                    account.length
-                  )
-                  } `}
-              </Text>
-            </Flex>
-            <Flex alignContent="center" m={3}>
-              <Button
-                onClick={() => { navigator.clipboard.writeText(`${account} `) }}
-                variant="link"
-                color="gray.400"
-                fontWeight="normal"
-                fontSize="sm"
-                _hover={{
-                  textDecoration: "none",
-                  color: "whiteAlpha.800",
-                }}
-              >
-                <CopyIcon mr={1} />
-                Copy Address
-              </Button>
-              <Link
-                fontSize="sm"
-                display="flex"
-                alignItems="center"
-                href={href}
-                isExternal
-                color="gray.400"
-                ml={6}
-                _hover={{
-                  color: "whiteAlpha.800",
-                  textDecoration: "underline",
-                }}
-              >
-                <ExternalLinkIcon mr={1} />
-                View on Explorer
-              </Link>
-            </Flex>
-          </Box>
-        </ModalBody>
-        <VictoryChart theme={VictoryTheme.material} domainPadding={30}>
-          <VictoryBar data={data.result}
-            x={(d) => formatDate(d.timeStamp)} y={(d) => formatValue(d)}
-          // x={(d) => formatDate(d.timeStamp)} y={(d) => account == 1
-          //   ? (d.value) * 10 ** -18
-          //   : -(d.value) * 10 ** -18
-          // }
-          />
-        </VictoryChart>
+      </VictoryChart>
+      <Button
+        variant="outline"
+        size="sm"
+        borderColor="blue.800"
+        borderRadius="3xl"
+        color="blue.500"
+        fontSize="13px"
+        fontWeight="normal"
+        px={2}
+        height="26px"
+        _hover={{
+          background: "none",
+          borderColor: "blue.300",
+          textDecoration: "underline",
+        }}
+        onClick={routeChange}
+      >
+        Change
+      </Button>
+    </div>
+
+    // <Modal isCentered size="md">
+    //   <ModalOverlay />
+    //   <ModalContent
+    //     background="gray.900"
+    //     border="1px"
+    //     borderStyle="solid"
+    //     borderColor="gray.700"
+    //     borderRadius="3xl"
+    //   >
+    //     <ModalHeader color="white" px={4} fontSize="lg" fontWeight="medium">
+    //       Dashboard
+    //     </ModalHeader>
+    //     <ModalCloseButton
+    //       color="white"
+    //       fontSize="sm"
+    //       _hover={{
+    //         color: "whiteAlpha.700",
+    //       }}
+    //     />
+    //     <ModalBody pt={0} px={4}>
+    //       <Box
+    //         borderRadius="3xl"
+    //         border="1px"
+    //         borderStyle="solid"
+    //         borderColor="gray.600"
+    //         px={5}
+    //         pt={4}
+    //         pb={2}
+    //         mb={3}
+    //       >
+    //         <Flex justifyContent="space-between" alignItems="center" mb={3}>
+    //           <Text color="gray.400" fontSize="sm">
+    //             Connected with MetaMask
+    //           </Text>
+    //           <Button
+    //             variant="outline"
+    //             size="sm"
+    //             borderColor="blue.800"
+    //             borderRadius="3xl"
+    //             color="blue.500"
+    //             fontSize="13px"
+    //             fontWeight="normal"
+    //             px={2}
+    //             height="26px"
+    //             _hover={{
+    //               background: "none",
+    //               borderColor: "blue.300",
+    //               textDecoration: "underline",
+    //             }}
+    //             onClick={handleDeactivateAccount}
+    //           >
+    //             Change
+    //           </Button>
+    //         </Flex>
+    //         <Flex alignItems="center" mt={2} mb={4} lineHeight={1}>
+    //           <Identicon />
+    //           <Text
+    //             color="white"
+    //             fontSize="xl"
+    //             fontWeight="semibold"
+    //             ml="2"
+    //             lineHeight="1.1"
+    //           >
+    //             {account &&
+    //               `${account.slice(0, 6)
+    //               }...${account.slice(
+    //                 account.length - 4,
+    //                 account.length
+    //               )
+    //               } `}
+    //           </Text>
+    //         </Flex>
+    //         <Flex alignContent="center" m={3}>
+    //           <Button
+    //             onClick={() => { navigator.clipboard.writeText(`${account} `) }}
+    //             variant="link"
+    //             color="gray.400"
+    //             fontWeight="normal"
+    //             fontSize="sm"
+    //             _hover={{
+    //               textDecoration: "none",
+    //               color: "whiteAlpha.800",
+    //             }}
+    //           >
+    //             <CopyIcon mr={1} />
+    //             Copy Address
+    //           </Button>
+    //           <Link
+    //             fontSize="sm"
+    //             display="flex"
+    //             alignItems="center"
+    //             href={href}
+    //             isExternal
+    //             color="gray.400"
+    //             ml={6}
+    //             _hover={{
+    //               color: "whiteAlpha.800",
+    //               textDecoration: "underline",
+    //             }}
+    //           >
+    //             <ExternalLinkIcon mr={1} />
+    //             View on Explorer
+    //           </Link>
+    //         </Flex>
+    //       </Box>
+    //     </ModalBody>
+    //     <VictoryChart theme={VictoryTheme.material} domainPadding={30}>
+    //       <VictoryBar data={data.result}
+    //         x={(d) => formatDate(d.timeStamp)} y={(d) => formatValue(d)}
+    //       // x={(d) => formatDate(d.timeStamp)} y={(d) => account == 1
+    //       //   ? (d.value) * 10 ** -18
+    //       //   : -(d.value) * 10 ** -18
+    //       // }
+    //       />
+    //     </VictoryChart>
 
 
-        <ModalFooter
-          justifyContent="end"
-          background="gray.700"
-          borderBottomLeftRadius="3xl"
-          borderBottomRightRadius="3xl"
-          p={6}
-        >
-          <Text
-            color="white"
-            textAlign="left"
-            fontWeight="medium"
-            fontSize="md"
-          >
-            {/* ${data.result.ethusd}
-            {formatDate(data.result.ethusd_timestamp)} */}
-            {/* {data.result[0].blockNumber} */}
-            {network}
-          </Text>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    //     <ModalFooter
+    //       justifyContent="end"
+    //       background="gray.700"
+    //       borderBottomLeftRadius="3xl"
+    //       borderBottomRightRadius="3xl"
+    //       p={6}
+    //     >
+    //       <Text
+    //         color="white"
+    //         textAlign="left"
+    //         fontWeight="medium"
+    //         fontSize="md"
+    //       >
+    //         {/* ${data.result.ethusd}
+    //         {formatDate(data.result.ethusd_timestamp)} */}
+    //         {/* {data.result[0].blockNumber} */}
+    //         {network}
+    //       </Text>
+    //     </ModalFooter>
+    //   </ModalContent>
+    // </Modal>
   );
 }

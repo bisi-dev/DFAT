@@ -20,16 +20,13 @@ import { useNavigate } from "react-router-dom";
 export default function AccountModal({ isOpen, onClose }) {
   const { account, activate, deactivate, activateBrowserWallet, chainId, } = useEthers();
 
-  let alias = '';
   let href = '';
   let network = '';
 
   if (chainId === 1) {
-    alias = '';
     href = "https://etherscan.io/address/" + account
     network = "Ethereum Mainnet"
   } else if (chainId === 3) {
-    alias = '-ropsten';
     href = "https://ropsten.etherscan.io/address/" + account
     network = "Ropsten Test Network"
   }
@@ -160,7 +157,7 @@ export default function AccountModal({ isOpen, onClose }) {
         </ModalBody>
 
         <ModalFooter
-          justifyContent="end"
+          justifyContent="center"
           background="gray.700"
           borderBottomLeftRadius="3xl"
           borderBottomRightRadius="3xl"
