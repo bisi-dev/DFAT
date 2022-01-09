@@ -34,10 +34,6 @@ After Forking/Cloning, you can get up and running in just a few minutes. From th
 
 3. **Voila! View app in any local browser at http://localhost:8000/**
 
-   ```
-   python main.py
-   ```
-
 ---
 ## Feedback
 
