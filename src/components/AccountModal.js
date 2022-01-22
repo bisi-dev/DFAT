@@ -32,6 +32,9 @@ export default function AccountModal({ isOpen, onClose }) {
   } else if (chainId === 4) {
     href = "https://rinkeby.etherscan.io/address/" + account
     network = "Rinkeby Test Network"
+  } else if (chainId === 5) {
+    href = "https://goerli.etherscan.io/address/" + account
+    network = "Goerli Test Network"
   }
 
   function handleDeactivateAccount() {
