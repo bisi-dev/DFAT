@@ -34,6 +34,8 @@ export default function AccountDashboard() {
     alias = '';
   } else if (chainId === 3) {
     alias = '-ropsten';
+  } else if (chainId === 4) {
+    alias = '-rinkeby';
   }
 
   // const { data, error, loading } = useAxios({

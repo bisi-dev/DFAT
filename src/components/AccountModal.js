@@ -29,6 +29,9 @@ export default function AccountModal({ isOpen, onClose }) {
   } else if (chainId === 3) {
     href = "https://ropsten.etherscan.io/address/" + account
     network = "Ropsten Test Network"
+  } else if (chainId === 4) {
+    href = "https://rinkeby.etherscan.io/address/" + account
+    network = "Rinkeby Test Network"
   }
 
   function handleDeactivateAccount() {
