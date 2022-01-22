@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -17,8 +18,9 @@ import { ExternalLinkIcon, CopyIcon, } from "@chakra-ui/icons";
 import { useEthers } from "@usedapp/core";
 import Identicon from "./Identicon";
 import { useAxios } from "use-axios-client";
+import axios from "axios";
 import { VictoryBar, VictoryChart, VictoryTheme, VictoryContainer } from 'victory';
-
+import { useTable } from 'react-table';
 
 export default function AccountDashboard() {
   const { account, deactivate, chainId } = useEthers();
@@ -34,8 +36,45 @@ export default function AccountDashboard() {
     alias = '-ropsten';
   }
 
-  const { data, error, loading } = useAxios({
-    url: "https://api" + alias + ".etherscan.io/api" +
+  // const { data, error, loading } = useAxios({
+  //   url: "https://api" + alias + ".etherscan.io/api" +
+  //     "?module=account" +
+  //     "&action=txlist" +
+  //     "&address=" + account +
+  //     "&startblock=0" +
+  //     "&endblock=99999999" +
+  //     "&page=1" +
+  //     "&offset=10" +
+  //     "&sort=asc" +
+  //     "&apikey=" + YourApiKeyToken
+  // });
+  // if (loading || !data) return <p>Loading...</p>;
+  // if (error) return <p>Error!</p>;
+  // console.log(chainId)
+
+  // const [data, setData] = useState('');
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const result = await axios("https://api" + alias + ".etherscan.io/api" +
+  //       "?module=account" +
+  //       "&action=txlist" +
+  //       "&address=" + account +
+  //       "&startblock=0" +
+  //       "&endblock=99999999" +
+  //       "&page=1" +
+  //       "&offset=10" +
+  //       "&sort=asc" +
+  //       "&apikey=" + YourApiKeyToken);
+  //     setData(result.data);
+  //   })();
+  // }, []);
+
+  let dataP = []
+  let data = []
+
+  function ipLookUp() {
+    axios.get("https://api" + alias + ".etherscan.io/api" +
       "?module=account" +
       "&action=txlist" +
       "&address=" + account +
@@ -44,11 +83,67 @@ export default function AccountDashboard() {
       "&page=1" +
       "&offset=10" +
       "&sort=asc" +
-      "&apikey=" + YourApiKeyToken
-  });
-  if (loading || !data) return <p>Loading...</p>;
-  if (error) return <p>Error!</p>;
-  console.log(chainId)
+      "&apikey=" + YourApiKeyToken)
+      .then(
+        function success(response) {
+          console.log(response.data.result);
+          const datax = response.data.result;
+          dataP = datax.map((x) => x)
+        },
+
+        function fail(data, status) {
+          console.log('Request failed.  Returned status of', status);
+        }
+      );
+  }
+
+  // const [state, setState] = useState(() => {
+  //   const initialState = someExpensiveComputation(props);
+  //   return initialState;
+  // });
+
+
+  ipLookUp()
+  console.log(dataP)
+  // const table = React.useMemo(() => data)
+  // const columns = React.useMemo(
+  //   () => [
+  //     {
+  //       Header: 'User Info',
+  //       columns: [
+  //         {
+  //           Header: 'Name',
+  //           accessor: 'from',
+  //         },
+  //         {
+  //           Header: 'Address',
+  //           accessor: 'to',
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       Header: 'Order Info',
+  //       columns: [
+  //         {
+  //           Header: 'Date',
+  //           accessor: 'timeStamp',
+  //         },
+  //         {
+  //           Header: 'Order #',
+  //           accessor: 'value',
+  //         },
+  //       ],
+  //     },
+  //   ],
+  //   []
+  // )
+  // const {
+  //   getTableProps,
+  //   getTableBodyProps,
+  //   headerGroups,
+  //   rows,
+  //   prepareRow,
+  // } = useTable({ columns, table })
 
   const formatDate = (timestamp) => {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }
@@ -72,13 +167,13 @@ export default function AccountDashboard() {
 
   return (
     <div>
-      <VictoryChart theme={VictoryTheme.material} domainPadding={30}>
+      {/* <VictoryChart theme={VictoryTheme.material} domainPadding={30}>
         <VictoryBar data={data.result}
           x={(d) => formatDate(d.timeStamp)} y={(d) => formatValue(d)}
         // x={(d) => formatDate(d.timeStamp)} 
         // y={(d) => account == 1 ? (d.value) * 10 ** -18 : -(d.value) * 10 ** -18 }
         />
-      </VictoryChart>
+      </VictoryChart> */}
       <Button
         variant="outline"
         size="sm"
@@ -98,7 +193,30 @@ export default function AccountDashboard() {
       >
         Change
       </Button>
-    </div>
+      {/* <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+          })}
+        </tbody>
+      </table> */}
+    </div >
 
     // <Modal isCentered size="md">
     //   <ModalOverlay />

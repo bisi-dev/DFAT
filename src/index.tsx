@@ -1,3 +1,4 @@
+import React from "react";
 import ReactDOM from "react-dom";
 import { DAppProvider } from "@usedapp/core";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
