@@ -20,6 +20,7 @@ export default function ConnectButton({ handleOpenModal }: Props) {
       //check if Metamask is installed
       try {
         activateBrowserWallet();
+        setButtonText("🦊 Connected to Metamask")
         return {
           connectedStatus: true,
           status: "🦊 Connected to Metamask",
@@ -106,8 +107,13 @@ export default function ConnectButton({ handleOpenModal }: Props) {
           borderColor: "blue.700",
         }}
       >
-        {buttonText}
+        Connect to a Wallet
       </Button>
+      <br></br>
+      <br></br>
+      <Text mt={-2} color="gray.400" fontSize="sm">
+        {buttonText}
+      </Text>
     </div>
   );
 }
