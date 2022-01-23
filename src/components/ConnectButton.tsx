@@ -7,12 +7,42 @@ type Props = {
   handleOpenModal: any;
 };
 
+declare const window: any;
+
 export default function ConnectButton({ handleOpenModal }: Props) {
   const { activateBrowserWallet, account } = useEthers();
   const etherBalance = useEtherBalance(account);
 
+  const connectWallet = async () => {
+    if (window.ethereum) { //check if Metamask is installed
+      try {
+        const address = await window.ethereum.enable(); //connect Metamask
+        const obj = {
+          connectedStatus: true,
+          status: "",
+          address: address
+        }
+        return obj;
+
+      } catch (error) {
+        return {
+          connectedStatus: false,
+          status: "🦊 Connect to Metamask using the button on the top right."
+        }
+      }
+
+    } else {
+      console.log('Help')
+      return {
+        connectedStatus: false,
+        status: "🦊 You must install Metamask into your browser: https://metamask.io/download.html"
+      }
+    }
+  };
+
   function handleConnectWallet() {
     activateBrowserWallet();
+    connectWallet();
   }
 
   return account ? (
