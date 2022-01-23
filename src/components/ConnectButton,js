@@ -1,19 +1,12 @@
-import { useState } from 'react'
 import { Button, Box, Text } from "@chakra-ui/react";
 import { useEthers, useEtherBalance } from "@usedapp/core";
 import { formatEther } from "@ethersproject/units";
 import Identicon from "./Identicon";
 
-type Props = {
-  handleOpenModal: any;
-};
-
-declare const window: any;
-
 export default function ConnectButton({ handleOpenModal }: Props) {
   const { activateBrowserWallet, account } = useEthers();
   const etherBalance = useEtherBalance(account);
-  const [buttonText, setButtonText] = useState("Connect to a Wallet");
+  let status = ''
 
   const connectWallet = async () => {
     if (window.ethereum) {
@@ -26,7 +19,6 @@ export default function ConnectButton({ handleOpenModal }: Props) {
         };
 
       } catch (error) {
-        setButtonText("🦊 Connect to Metamask using the button on the top right.")
         return {
           connectedStatus: false,
           status: "🦊 Connect to Metamask using the button on the top right."
@@ -34,7 +26,7 @@ export default function ConnectButton({ handleOpenModal }: Props) {
       }
 
     } else {
-      setButtonText("🦊 You must install Metamask into your browser: https://metamask.io/download.html")
+      status = 'False'
       return {
         connectedStatus: false,
         status: "🦊 You must install Metamask into your browser: https://metamask.io/download.html"
@@ -44,9 +36,6 @@ export default function ConnectButton({ handleOpenModal }: Props) {
 
   function handleConnectWallet() {
     connectWallet();
-    (async () => {
-      console.log(await (await connectWallet()).status)
-    })()
   }
 
   return account ? (
@@ -106,8 +95,11 @@ export default function ConnectButton({ handleOpenModal }: Props) {
           borderColor: "blue.700",
         }}
       >
-        {buttonText}
+        Connect to a wallet {status}
       </Button>
+      <Text color="white" fontSize="md" fontWeight="medium" mr="2">
+        {status}
+      </Text>
     </div>
   );
 }
